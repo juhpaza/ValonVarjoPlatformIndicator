@@ -1,10 +1,11 @@
 name: ValonVarjoPlatformIndicator
-version: 0.1.0-early
+version: 0.1.1-early
 main: fi.valonvarjo.platformindicator.ValonVarjoPlatformIndicatorPlugin
 api-version: '1.21'
 folia-supported: true
 softdepend:
   - floodgate
+  - Geyser-Spigot
   - EssentialsChat
 commands:
   vvplatformindicator:

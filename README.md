@@ -28,20 +28,27 @@ Tested on:
 
 - Paper `26.2`
 - Java `25.0.3`
-- Floodgate `2.2.5-SNAPSHOT`
 - Geyser `2.11.0-SNAPSHOT`
+- Floodgate `2.2.5-SNAPSHOT`
 - EssentialsXChat `2.22.0`
 - LuckPerms `5.5.53`
 
-Other Paper/Floodgate versions may work, but have not been fully tested yet.
+Other Paper, Geyser and Floodgate versions may work, but have not been fully tested yet.
 
 ## Requirements
 
 - Paper or a compatible Paper-based server
-- Floodgate for Bedrock detection
+- Geyser for Bedrock connections
+- Floodgate for the most accurate Bedrock detection, recommended when available
 - Java 21 or newer
 
-If Floodgate is not loaded, the plugin does not stop the server. It logs a warning and treats senders as Java players.
+Platform detection order:
+
+1. Floodgate API, when Floodgate is loaded.
+2. Geyser API fallback, when Floodgate is not loaded and Geyser is loaded.
+3. Java fallback, when neither API is available.
+
+The plugin does not detect Bedrock players from username prefixes.
 
 ## Permissions
 
@@ -72,6 +79,8 @@ Do not give `valonvarjo.chat.platformindicator` to normal player or VIP groups i
 ```yaml
 permission: valonvarjo.chat.platformindicator
 debug-log-platform-detection: false
+detection:
+  geyser-api-fallback: true
 indicators:
   bedrock:
     open-bracket: "<gray>[</gray>"
@@ -112,7 +121,7 @@ mvn clean package
 The jar will be created in:
 
 ```text
-target/ValonVarjoPlatformIndicator-0.1.0-early.jar
+target/ValonVarjoPlatformIndicator-0.1.1-early.jar
 ```
 
 ## Installation

@@ -1,5 +1,7 @@
 permission: valonvarjo.chat.platformindicator
 debug-log-platform-detection: false
+detection:
+  geyser-api-fallback: true
 indicators:
   bedrock:
     open-bracket: "<gray>[</gray>"

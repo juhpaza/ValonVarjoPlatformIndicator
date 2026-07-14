@@ -6,11 +6,11 @@
 
     <groupId>fi.valonvarjo</groupId>
     <artifactId>valonvarjo-platform-indicator</artifactId>
-    <version>0.1.0-early</version>
+    <version>0.1.1-early</version>
     <packaging>jar</packaging>
 
     <name>ValonVarjoPlatformIndicator</name>
-    <description>Staff-only Java/Bedrock chat platform indicator for Paper and Floodgate.</description>
+    <description>Staff-only Java/Bedrock chat platform indicator for Paper, Floodgate and Geyser.</description>
     <url>https://github.com/juhpaza/ValonVarjoPlatformIndicator</url>
 
     <properties>

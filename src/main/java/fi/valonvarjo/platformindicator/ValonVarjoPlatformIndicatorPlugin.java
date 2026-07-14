@@ -25,6 +25,7 @@ public final class ValonVarjoPlatformIndicatorPlugin extends JavaPlugin implemen
     private Component javaIndicator;
     private Component spacing;
     private boolean debugLogPlatformDetection;
+    private boolean useGeyserFallback;
 
     @Override
     public void onEnable() {
@@ -42,6 +43,7 @@ public final class ValonVarjoPlatformIndicatorPlugin extends JavaPlugin implemen
         javaIndicator = loadIndicator("indicators.java", "<gray>[</gray><green>J</green><gray>]</gray>");
         spacing = Component.text(getConfig().getString("spacing", " "));
         debugLogPlatformDetection = getConfig().getBoolean("debug-log-platform-detection", false);
+        useGeyserFallback = getConfig().getBoolean("detection.geyser-api-fallback", true);
     }
 
     private Component loadIndicator(String path, String fallback) {
@@ -58,18 +60,29 @@ public final class ValonVarjoPlatformIndicatorPlugin extends JavaPlugin implemen
 
     private PlatformDetector createPlatformDetector() {
         Plugin floodgate = Bukkit.getPluginManager().getPlugin("floodgate");
-        if (floodgate == null || !floodgate.isEnabled()) {
-            getLogger().warning("Floodgate is not loaded. Bedrock detection is unavailable; all senders are treated as Java players.");
-            return sender -> false;
+        if (floodgate != null && floodgate.isEnabled()) {
+            try {
+                getLogger().info("Using Floodgate API for Bedrock platform detection.");
+                return new FloodgatePlatformDetector();
+            } catch (NoClassDefFoundError | IllegalStateException ex) {
+                getLogger().warning("Floodgate API was not available: " + ex.getMessage());
+            }
         }
 
-        try {
-            return new FloodgatePlatformDetector();
-        } catch (NoClassDefFoundError | IllegalStateException ex) {
-            getLogger().warning("Floodgate API was not available: " + ex.getMessage());
-            getLogger().warning("Bedrock detection is unavailable; all senders are treated as Java players.");
-            return sender -> false;
+        if (useGeyserFallback) {
+            Plugin geyser = Bukkit.getPluginManager().getPlugin("Geyser-Spigot");
+            if (geyser != null && geyser.isEnabled()) {
+                try {
+                    getLogger().info("Using Geyser API fallback for Bedrock platform detection.");
+                    return new GeyserPlatformDetector();
+                } catch (IllegalStateException ex) {
+                    getLogger().warning("Geyser API fallback was not available: " + ex.getMessage());
+                }
+            }
         }
+
+        getLogger().warning("Floodgate is not loaded and Geyser API fallback is unavailable. All senders are treated as Java players.");
+        return sender -> false;
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
