@@ -1,0 +1,12 @@
+permission: valonvarjo.chat.platformindicator
+debug-log-platform-detection: false
+indicators:
+  bedrock:
+    open-bracket: "<gray>[</gray>"
+    letter: "<dark_gray>B</dark_gray>"
+    close-bracket: "<gray>]</gray>"
+  java:
+    open-bracket: "<gray>[</gray>"
+    letter: "<green>J</green>"
+    close-bracket: "<gray>]</gray>"
+spacing: " "

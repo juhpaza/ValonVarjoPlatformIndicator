@@ -1,0 +1,22 @@
+name: ValonVarjoPlatformIndicator
+version: 0.1.0-early
+main: fi.valonvarjo.platformindicator.ValonVarjoPlatformIndicatorPlugin
+api-version: '1.21'
+folia-supported: true
+softdepend:
+  - floodgate
+  - EssentialsChat
+commands:
+  vvplatformindicator:
+    description: Reloads ValonVarjoPlatformIndicator configuration.
+    usage: /<command> reload
+    permission: valonvarjo.chat.platformindicator.reload
+    aliases:
+      - vvpi
+permissions:
+  valonvarjo.chat.platformindicator:
+    description: Allows the recipient to see Java/Bedrock platform indicators in chat.
+    default: false
+  valonvarjo.chat.platformindicator.reload:
+    description: Allows reloading ValonVarjoPlatformIndicator configuration.
+    default: false
