@@ -46,6 +46,7 @@ public final class ValonVarjoPlatformIndicatorPlugin extends JavaPlugin implemen
         PluginCommand pluginCommand = getCommand("vvplatformindicator");
         if (pluginCommand != null) {
             pluginCommand.setExecutor(this);
+            pluginCommand.setTabCompleter(this);
             pluginCommand.setPermission(null);
             pluginCommand.setAliases(List.of("vvpi"));
             if (commandMap.getCommand("vvplatformindicator") != null
@@ -64,6 +65,11 @@ public final class ValonVarjoPlatformIndicatorPlugin extends JavaPlugin implemen
             @Override
             public boolean execute(CommandSender sender, String label, String[] args) {
                 return executeReloadCommand(sender, label, args);
+            }
+
+            @Override
+            public List<String> tabComplete(CommandSender sender, String alias, String[] args) {
+                return completeReloadCommand(sender, args);
             }
         };
         commandMap.register(getName().toLowerCase(), command);
@@ -173,6 +179,23 @@ public final class ValonVarjoPlatformIndicatorPlugin extends JavaPlugin implemen
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         return executeReloadCommand(sender, label, args);
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        return completeReloadCommand(sender, args);
+    }
+
+    private List<String> completeReloadCommand(CommandSender sender, String[] args) {
+        if (sender instanceof Player && !sender.hasPermission("valonvarjo.chat.platformindicator.reload")) {
+            return List.of();
+        }
+
+        if (args.length == 1 && "reload".startsWith(args[0].toLowerCase())) {
+            return List.of("reload");
+        }
+
+        return List.of();
     }
 
     private boolean executeReloadCommand(CommandSender sender, String label, String[] args) {
