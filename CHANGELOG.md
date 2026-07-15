@@ -1,10 +1,13 @@
 # Changelog
 
+## 0.1.3-early
+
+- Added tab-completion for the `reload` subcommand.
+
 ## 0.1.2-early
 
 - Fixed `/vvplatformindicator reload` and `/vvpi reload` by registering the reload command programmatically when Paper does not expose the `plugin.yml` command.
 - Moved reload permission enforcement into the plugin so console/RCON can run reload without Brigadier hiding the command.
-- Added tab-completion for the `reload` subcommand.
 
 ## 0.1.1-early
 
