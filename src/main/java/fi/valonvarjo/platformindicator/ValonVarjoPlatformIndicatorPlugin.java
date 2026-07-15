@@ -8,13 +8,17 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.List;
 
 public final class ValonVarjoPlatformIndicatorPlugin extends JavaPlugin implements Listener {
     private final MiniMessage miniMessage = MiniMessage.miniMessage();
@@ -32,8 +36,49 @@ public final class ValonVarjoPlatformIndicatorPlugin extends JavaPlugin implemen
         saveDefaultConfig();
         reloadLocalConfig();
         platformDetector = createPlatformDetector();
+        registerReloadCommand();
         Bukkit.getPluginManager().registerEvents(this, this);
         getLogger().info("Platform indicators enabled for recipients with " + permission);
+    }
+
+    private void registerReloadCommand() {
+        CommandMap commandMap = Bukkit.getCommandMap();
+        PluginCommand pluginCommand = getCommand("vvplatformindicator");
+        if (pluginCommand != null) {
+            pluginCommand.setExecutor(this);
+            if (commandMap.getCommand("vvplatformindicator") != null
+                    || commandMap.getCommand(getName().toLowerCase() + ":vvplatformindicator") != null) {
+                syncServerCommands();
+                return;
+            }
+        }
+
+        Command command = new Command(
+                "vvplatformindicator",
+                "Reloads ValonVarjoPlatformIndicator configuration.",
+                "/vvplatformindicator reload",
+                List.of("vvpi")) {
+            @Override
+            public boolean execute(CommandSender sender, String label, String[] args) {
+                return executeReloadCommand(sender, label, args);
+            }
+        };
+        commandMap.register(getName().toLowerCase(), command);
+        syncServerCommands();
+        getLogger().warning("plugin.yml command was not registered automatically; registered reload command programmatically.");
+    }
+
+    private void syncServerCommands() {
+        syncServerCommandsNow();
+        Bukkit.getScheduler().runTask(this, this::syncServerCommandsNow);
+    }
+
+    private void syncServerCommandsNow() {
+        try {
+            Bukkit.getServer().getClass().getMethod("syncCommands").invoke(Bukkit.getServer());
+        } catch (ReflectiveOperationException ex) {
+            getLogger().fine("Server implementation does not expose syncCommands(): " + ex.getMessage());
+        }
     }
 
     private void reloadLocalConfig() {
@@ -124,6 +169,15 @@ public final class ValonVarjoPlatformIndicatorPlugin extends JavaPlugin implemen
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        return executeReloadCommand(sender, label, args);
+    }
+
+    private boolean executeReloadCommand(CommandSender sender, String label, String[] args) {
+        if (sender instanceof Player && !sender.hasPermission("valonvarjo.chat.platformindicator.reload")) {
+            sender.sendMessage("You do not have permission to use this command.");
+            return true;
+        }
+
         if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
             reloadLocalConfig();
             sender.sendMessage("ValonVarjoPlatformIndicator reloaded.");

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.2-early
+
+- Fixed `/vvplatformindicator reload` and `/vvpi reload` by registering the reload command programmatically when Paper does not expose the `plugin.yml` command.
+- Moved reload permission enforcement into the plugin so console/RCON can run reload without Brigadier hiding the command.
+
 ## 0.1.1-early
 
 - Added Geyser API fallback detection when Floodgate is not loaded.

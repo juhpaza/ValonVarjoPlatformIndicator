@@ -6,7 +6,7 @@
 
     <groupId>fi.valonvarjo</groupId>
     <artifactId>valonvarjo-platform-indicator</artifactId>
-    <version>0.1.1-early</version>
+    <version>0.1.2-early</version>
     <packaging>jar</packaging>
 
     <name>ValonVarjoPlatformIndicator</name>

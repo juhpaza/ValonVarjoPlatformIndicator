@@ -121,7 +121,7 @@ mvn clean package
 The jar will be created in:
 
 ```text
-target/ValonVarjoPlatformIndicator-0.1.1-early.jar
+target/ValonVarjoPlatformIndicator-0.1.2-early.jar
 ```
 
 ## Installation
