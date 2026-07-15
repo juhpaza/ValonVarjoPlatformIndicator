@@ -46,9 +46,12 @@ public final class ValonVarjoPlatformIndicatorPlugin extends JavaPlugin implemen
         PluginCommand pluginCommand = getCommand("vvplatformindicator");
         if (pluginCommand != null) {
             pluginCommand.setExecutor(this);
+            pluginCommand.setPermission(null);
+            pluginCommand.setAliases(List.of("vvpi"));
             if (commandMap.getCommand("vvplatformindicator") != null
                     || commandMap.getCommand(getName().toLowerCase() + ":vvplatformindicator") != null) {
                 syncServerCommands();
+                getLogger().info("Registered reload command from plugin.yml.");
                 return;
             }
         }
